@@ -7,7 +7,7 @@ def OutputTypes(files, opts='cnstug'):
     types_vim.write('syntax keyword Type ')
     # Build command line
     cmd = 'ctags --c-types=' + opts + ' '
-    cmd += '-o- ' + string.join(files)
+    cmd += '-o- ' + string.join([f for f in files if f[:1] <> '-'])
     pipe = os.popen(cmd, 'r')
     lines = pipe.readlines()
     pipe.close()
@@ -23,15 +23,14 @@ def OutputTypes(files, opts='cnstug'):
 def GetIncludes(files):
     'Return list of headers included in files.'
     result = {}
-    for file in files:
-        cmd = 'cpp -H ' + file + ' 2>&1 >/dev/null'
-        pipe = os.popen(cmd, 'r')
-        lines = pipe.readlines()
-        pipe.close()
-        for line in lines:
-            line = line.strip(' .\t\n')
-            if line.endswith('.h') and os.access(line, os.R_OK):
-                result[line] = 1
+    cmd = 'cpp -H ' + ' '.join(files) + ' 2>&1 >/dev/null'
+    pipe = os.popen(cmd, 'r')
+    lines = pipe.readlines()
+    pipe.close()
+    for line in lines:
+        line = line.strip(' .\t\n')
+        if line.endswith('.h') and os.access(line, os.R_OK):
+            result[line] = 1
     return result.keys()
 
 def CreateTypesVim(files):
@@ -40,4 +39,3 @@ def CreateTypesVim(files):
 if __name__ == '__main__': CreateTypesVim(sys.argv[1:])
 
 #vim: set et:
-
