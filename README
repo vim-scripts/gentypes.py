@@ -1,0 +1,5 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1233
+
+While browsing Vim documentation I encountered a nice tip about how to get highlithing of user-defined types. I decided to extend it a little to also support types defined elsewhere, that the source file may use (i.e. included files).
+
+The script is written in Python and also requires CPP preprocessor (tested with 3.3 and 3.4) as well as exuberant ctags program.
